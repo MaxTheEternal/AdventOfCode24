@@ -19,7 +19,7 @@ func TestSafeReports(t *testing.T) {
 			args{
 				"./day2_input_test.txt",
 			},
-			2,
+			4,
 			false,
 		},
 	}

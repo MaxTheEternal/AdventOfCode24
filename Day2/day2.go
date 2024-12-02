@@ -25,30 +25,34 @@ func SafeReports(path string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	fmt.Print(data)
-	fmt.Println()
 
 	safeRows := 0
-
 	for _, v := range data {
 		if rowIsSafe(v) {
 			safeRows += 1
-			fmt.Printf("Row %v is safe\n", v)
 		}
 	}
 
 	return safeRows, nil
-
 }
 
 func rowIsSafe(row []int) bool {
-	return rowIsSafeInternal(row, 0)
-}
-func rowIsSafeInternal(row []int, count int) bool {
-
-	if count >= 1 {
-		return false
+	safe := rowIsSafeInternal(row)
+	if safe {
+		return true
 	}
+	for i := range row {
+		modified := make([]int, len(row))
+		copy(modified, row)
+		modified = append(modified[:i], modified[i+1:]...)
+		if rowIsSafeInternal(modified) {
+			return true
+		}
+	}
+	return false
+}
+func rowIsSafeInternal(row []int) bool {
+
 	if len(row) == 0 {
 		return false
 	}
