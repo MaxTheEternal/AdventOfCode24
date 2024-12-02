@@ -42,60 +42,36 @@ func SafeReports(path string) (int, error) {
 }
 
 func rowIsSafe(row []int) bool {
+	return rowIsSafeInternal(row, 0)
+}
+func rowIsSafeInternal(row []int, count int) bool {
+
+	if count >= 1 {
+		return false
+	}
 	if len(row) == 0 {
 		return false
 	}
 	if len(row) == 1 {
 		return true
 	}
-
-	return checkAscending(row) || checkDescending(row)
-}
-func checkAscending(row []int) bool {
-
-	count := 0
-
-	for i := 0; i < len(row)-1; i++ {
-		if row[i] > row[i+1] {
-			dist := absolut(row[i] - row[i+1])
-			if dist > 3 || dist == 0 {
-				count += 1
-				continue
+	//	ascending order
+	if row[0] < row[1] {
+		for i := 0; i < len(row)-1; i++ {
+			diff := row[i+1] - row[i]
+			if diff < 1 || diff > 3 {
+				return false
 			}
-			count += 1
-			continue
 		}
-		dist := absolut(row[i] - row[i+1])
-		if dist > 3 || dist == 0 {
-			count += 1
-			continue
-		}
-	}
-	return count <= 1
-}
-func checkDescending(row []int) bool {
-
-	count := 0
-
-	for i := 0; i < len(row)-1; i++ {
-		if row[i] < row[i+1] {
-			count += 1
-			continue
-		}
-		dist := absolut(row[i] - row[i+1])
-		if dist > 3 || dist == 0 {
-			count += 1
-			continue
+	} else {
+		for i := 0; i < len(row)-1; i++ {
+			diff := row[i] - row[i+1]
+			if diff < 1 || diff > 3 {
+				return false
+			}
 		}
 	}
-	return count <= 1
-}
-
-func absolut(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
+	return true
 }
 
 func getData(path string) ([][]int, error) {
