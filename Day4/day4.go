@@ -10,7 +10,13 @@ import (
 func main() {
 	file := "./Day4/day4_input.txt"
 	lines := readFileIntoLines(file)
-	countXMas(lines)
+	count := countXMas(lines)
+	fmt.Printf("XMAS Counted: %v\n", count)
+}
+
+func countXMasPart2(lines []string) int {
+
+	return 0
 
 }
 
@@ -21,10 +27,12 @@ func countXMas(lines []string) int {
 	if leny == 0 {
 		return 0
 	}
+	counter := 0
 	lenx := len(lines[0])
 	for y := 0; y < leny; y++ {
 		for x := 0; x < lenx; x++ {
 			char := string(lines[y][x])
+			counter++
 			if char == "X" {
 				matches += checkWord(lines, "XMAS", x, y, lenx, leny)
 			} else if char == "S" {
@@ -32,6 +40,7 @@ func countXMas(lines []string) int {
 			}
 		}
 	}
+	fmt.Printf("Fields checked: %v\n", counter)
 	return matches
 }
 
@@ -61,7 +70,7 @@ func checkWord(lines []string, word string, x, y, lenx, leny int) int {
 			matches += 1
 		}
 	}
-	if x > 3 && y < leny-3 {
+	if x > 2 && y < leny-3 {
 		diagonal := string(lines[y][x]) + string(lines[y+1][x-1]) + string(lines[y+2][x-2]) + string(lines[y+3][x-3])
 		// fmt.Println("Diagonal L: " + diagonal)
 		if diagonal == word {
