@@ -10,13 +10,56 @@ import (
 func main() {
 	file := "./Day4/day4_input.txt"
 	lines := readFileIntoLines(file)
-	count := countXMas(lines)
-	fmt.Printf("XMAS Counted: %v\n", count)
+	count1 := countXMas(lines)
+	count2 := countXMasPart2(lines)
+	fmt.Printf("XMAS Counted: %v\n", count1)
+	fmt.Printf("Crosses Counted: %v\n", count2)
 }
 
 func countXMasPart2(lines []string) int {
+	matches := 0
 
-	return 0
+	leny := len(lines)
+	if leny == 0 {
+		return 0
+	}
+
+	lenx := len(lines[0])
+	for y := 0; y < leny; y++ {
+		for x := 0; x < lenx; x++ {
+			char := string(lines[y][x])
+			if char == "A" {
+				if checkCrossMass(lines, x, y, lenx, leny) {
+					matches++
+				}
+
+			}
+		}
+	}
+	return matches
+}
+
+func checkCrossMass(lines []string, x, y, lenx, leny int) bool {
+	if x == 0 || y == 0 {
+		return false
+	}
+	if x == lenx-1 || y == leny-1 {
+		return false
+	}
+	cross := string(lines[y+1][x-1]) + string(lines[y+1][x+1]) + string(lines[y-1][x-1]) + string(lines[y-1][x+1])
+
+	switch cross {
+	case "MSMS":
+		return true
+	case "MMSS":
+		return true
+	case "SSMM":
+		return true
+	case "SMSM":
+		return true
+	default:
+		return false
+	}
 
 }
 
@@ -27,12 +70,10 @@ func countXMas(lines []string) int {
 	if leny == 0 {
 		return 0
 	}
-	counter := 0
 	lenx := len(lines[0])
 	for y := 0; y < leny; y++ {
 		for x := 0; x < lenx; x++ {
 			char := string(lines[y][x])
-			counter++
 			if char == "X" {
 				matches += checkWord(lines, "XMAS", x, y, lenx, leny)
 			} else if char == "S" {
@@ -40,7 +81,6 @@ func countXMas(lines []string) int {
 			}
 		}
 	}
-	fmt.Printf("Fields checked: %v\n", counter)
 	return matches
 }
 
@@ -50,7 +90,7 @@ func checkWord(lines []string, word string, x, y, lenx, leny int) int {
 		straight := lines[y][x : x+4]
 		// fmt.Println("straight: " + straight)
 		if straight == word {
-			fmt.Println(straight + " straight")
+			// fmt.Println(straight + " straight")
 			matches += 1
 		}
 	}
@@ -58,7 +98,7 @@ func checkWord(lines []string, word string, x, y, lenx, leny int) int {
 		down := string(lines[y][x]) + string(lines[y+1][x]) + string(lines[y+2][x]) + string(lines[y+3][x])
 		// fmt.Println("Down: " + down)
 		if down == word {
-			fmt.Println(down + " down")
+			// fmt.Println(down + " down")
 			matches += 1
 		}
 	}
@@ -66,7 +106,7 @@ func checkWord(lines []string, word string, x, y, lenx, leny int) int {
 		diagonal := string(lines[y][x]) + string(lines[y+1][x+1]) + string(lines[y+2][x+2]) + string(lines[y+3][x+3])
 		// fmt.Println("Diagonal R: " + diagonal)
 		if diagonal == word {
-			fmt.Println(diagonal + " diag R")
+			// fmt.Println(diagonal + " diag R")
 			matches += 1
 		}
 	}
@@ -74,7 +114,7 @@ func checkWord(lines []string, word string, x, y, lenx, leny int) int {
 		diagonal := string(lines[y][x]) + string(lines[y+1][x-1]) + string(lines[y+2][x-2]) + string(lines[y+3][x-3])
 		// fmt.Println("Diagonal L: " + diagonal)
 		if diagonal == word {
-			fmt.Println(diagonal + " diag L")
+			// fmt.Println(diagonal + " diag L")
 			matches += 1
 		}
 	}
