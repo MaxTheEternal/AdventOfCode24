@@ -1,4 +1,4 @@
-package main
+package day3
 
 import (
 	"bufio"
@@ -10,8 +10,9 @@ import (
 	"strings"
 )
 
-func main() {
+func Day3() {
 	file := "./Day3/day3_input.txt"
+	fmt.Println("Day 3")
 	fmt.Printf("Part 1: %v\n", correctMuls(file))
 	fmt.Printf("Part 2: %v\n", correctMulsWithInstructions(file))
 }

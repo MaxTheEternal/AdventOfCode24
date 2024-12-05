@@ -1,4 +1,4 @@
-package main
+package day2
 
 import (
 	"bufio"
@@ -9,13 +9,15 @@ import (
 	"strings"
 )
 
-func main() {
+func Day2() {
 
 	file := "./Day2/day2_input.txt"
 	value, err := SafeReports(file)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Day 2")
 	fmt.Printf("Safe rows: %v\n", value)
 
 }

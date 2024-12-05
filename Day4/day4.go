@@ -1,4 +1,4 @@
-package main
+package day4
 
 import (
 	"bufio"
@@ -7,13 +7,14 @@ import (
 	"os"
 )
 
-func main() {
+func Day4() {
 	file := "./Day4/day4_input.txt"
 	lines := readFileIntoLines(file)
 	count1 := countXMas(lines)
 	count2 := countXMasPart2(lines)
-	fmt.Printf("XMAS Counted: %v\n", count1)
-	fmt.Printf("Crosses Counted: %v\n", count2)
+	fmt.Println("Day 4")
+	fmt.Printf("Part 1: XMAS Counted: %v\n", count1)
+	fmt.Printf("Part 2: Crosses Counted: %v\n", count2)
 }
 
 func countXMasPart2(lines []string) int {

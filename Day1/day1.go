@@ -1,4 +1,4 @@
-package main
+package day1
 
 import (
 	"bufio"
@@ -11,14 +11,17 @@ import (
 	"strings"
 )
 
-func main() {
+func Day1() {
 
 	file := "./Day1/day1_input.txt"
 
+	fmt.Println("Day 1")
 	totalDistance := CalculateTotalDistance(file)
+	fmt.Println("Part 1")
 	fmt.Printf("Total Distance: %v\n", totalDistance)
 
 	totalSimilarity := SimilarityScore(file)
+	fmt.Println("Part 2")
 	fmt.Printf("Total Similarity: %v\n", totalSimilarity)
 }
 
