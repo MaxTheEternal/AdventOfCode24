@@ -1,4 +1,4 @@
-package main
+package day5
 
 import (
 	"bufio"
@@ -10,18 +10,20 @@ import (
 	"strings"
 )
 
-func main() {
+func Day5() {
 	file := "./Day5/day5_input.txt"
+	fmt.Println("Day 5")
 	fmt.Printf("Part 1: %v\n", PartOne(file))
+	fmt.Printf("Par2: %v\n", PartTwo(file))
 }
 
 func PartTwo(file string) int {
-	a, b, c := readInput(file)
-	return sumOfMiddlePages(listOfUpdates(a, b, c, false))
+	beforeMap, b := readInput(file)
+	return sumOfMiddlePages(sortWrongUpdates(beforeMap, listOfUpdates(beforeMap, b, false)))
 }
 func PartOne(file string) int {
-	a, b, c := readInput(file)
-	return sumOfMiddlePages(listOfUpdates(a, b, c, true))
+	beforeMap, b := readInput(file)
+	return sumOfMiddlePages(listOfUpdates(beforeMap, b, true))
 }
 
 func sumOfMiddlePages(pagelist [][]int) int {
@@ -32,18 +34,27 @@ func sumOfMiddlePages(pagelist [][]int) int {
 	return sum
 }
 
-func listOfUpdates(lefts []int, rights []int, pagelist [][]int, correctOnes bool) [][]int {
+func sortWrongUpdates(beforeMap map[int][]int, pagelist [][]int) [][]int {
+	for _, pages := range pagelist {
+		slices.SortFunc(pages, func(a, b int) int {
+			befores := beforeMap[a]
+			if slices.Contains(befores, b) {
+				return 1
+			} else {
+				return -1
+			}
+		})
+	}
+	return pagelist
+}
+
+func listOfUpdates(beforemap map[int][]int, pagelist [][]int, correctOnes bool) [][]int {
 	result := [][]int{}
 
 	for _, pages := range pagelist {
 		rule := correctOnes
 		for pageIndex, page := range pages {
-			beforeNums := []int{}
-			for rightIndex, rightValue := range rights {
-				if rightValue == page {
-					beforeNums = append(beforeNums, lefts[rightIndex])
-				}
-			}
+			beforeNums := beforemap[page]
 			for _, v := range beforeNums {
 				index := slices.Index(pages, v)
 				if index > pageIndex {
@@ -60,14 +71,13 @@ func listOfUpdates(lefts []int, rights []int, pagelist [][]int, correctOnes bool
 	return result
 }
 
-func readInput(file string) ([]int, []int, [][]int) {
+func readInput(file string) (map[int][]int, [][]int) {
 	openFile, err := os.Open(file)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	left := []int{}
-	right := []int{}
+	beforeMap := make(map[int][]int)
 	pages := [][]int{}
 
 	scanner := bufio.NewScanner(openFile)
@@ -84,16 +94,15 @@ func readInput(file string) ([]int, []int, [][]int) {
 			if len(nums) != 2 {
 				log.Fatal("Rules read incorrectly")
 			}
-			num1, err := strconv.Atoi(nums[0])
+			leftNum, err := strconv.Atoi(nums[0])
 			if err != nil {
 				log.Fatal(err)
 			}
-			num2, err := strconv.Atoi(nums[1])
+			rightNum, err := strconv.Atoi(nums[1])
 			if err != nil {
 				log.Fatal(err)
 			}
-			left = append(left, num1)
-			right = append(right, num2)
+			beforeMap[rightNum] = append(beforeMap[rightNum], leftNum)
 
 		} else {
 			nums := strings.Split(line, ",")
@@ -110,5 +119,5 @@ func readInput(file string) ([]int, []int, [][]int) {
 
 		}
 	}
-	return left, right, pages
+	return beforeMap, pages
 }
