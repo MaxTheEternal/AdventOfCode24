@@ -14,7 +14,7 @@ func Day5() {
 	file := "./Day5/day5_input.txt"
 	fmt.Println("Day 5")
 	fmt.Printf("Part 1: %v\n", PartOne(file))
-	fmt.Printf("Par2: %v\n", PartTwo(file))
+	fmt.Printf("Par 2: %v\n", PartTwo(file))
 }
 
 func PartTwo(file string) int {
