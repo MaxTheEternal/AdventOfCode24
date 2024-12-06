@@ -6,6 +6,7 @@ import (
 	day3 "github.com/MaxTheEternal/AdventOfCode24/Day3"
 	day4 "github.com/MaxTheEternal/AdventOfCode24/Day4"
 	day5 "github.com/MaxTheEternal/AdventOfCode24/Day5"
+	day6 "github.com/MaxTheEternal/AdventOfCode24/Day6"
 )
 
 func main() {
@@ -14,4 +15,5 @@ func main() {
 	day3.Day3()
 	day4.Day4()
 	day5.Day5()
+	day6.Day6()
 }
