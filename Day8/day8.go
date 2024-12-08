@@ -83,7 +83,9 @@ func partTwo(file string) int {
 				xDelta := antenna2.x - antenna1.x
 				yDelta := antenna2.y - antenna1.y
 
-				for count := -50; count < 50; count++ {
+				countSize := max((xSize/xDelta)+1, (ySize/yDelta)+1)
+
+				for count := -countSize; count < countSize; count++ {
 					newX := antenna1.x + count*xDelta
 					newY := antenna1.y + count*yDelta
 					if isInBounds(newX, newY, xSize, ySize) {
@@ -93,37 +95,6 @@ func partTwo(file string) int {
 						}
 					}
 				}
-				// times := 0
-				// positiveReached := false
-				// for !positiveReached {
-				// 	newX := antenna1.x + times*xDelta
-				// 	newY := antenna1.y + times*yDelta
-				// 	if isInBounds(newX, newY, xSize, ySize) {
-				// 		antiNode1 := coordiante{newX, newY}
-				// 		if !slices.Contains(antiNodes, antiNode1) {
-				// 			antiNodes = append(antiNodes, antiNode1)
-				// 		}
-				// 	} else {
-				// 		positiveReached = true
-				// 	}
-				// 	times++
-				// }
-				//
-				// times = 0
-				// negaiveReached := false
-				// for !negaiveReached {
-				// 	newX := antenna1.x - times*xDelta
-				// 	newY := antenna1.y - times*yDelta
-				// 	if isInBounds(newX, newY, xSize, ySize) {
-				// 		antiNode1 := coordiante{newX, newY}
-				// 		if !slices.Contains(antiNodes, antiNode1) {
-				// 			antiNodes = append(antiNodes, antiNode1)
-				// 		}
-				// 	} else {
-				// 		negaiveReached = true
-				// 	}
-				// 	times--
-				// }
 			}
 		}
 	}
