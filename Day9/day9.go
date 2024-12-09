@@ -2,6 +2,7 @@ package day9
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -13,18 +14,19 @@ func Day9() {
 	file := "./Day9/day9_input.txt"
 	fmt.Println("Day 9")
 	fmt.Printf("Part 1: %v\n", PartOne(file))
+	fmt.Printf("Part 2: %v\n", PartTwo(file))
 
 }
 
 func PartOne(file string) int {
-
 	files := compactFiles(readFile(file))
-	fmt.Println(files)
 	return calcCheckSum(files)
 }
 
 func PartTwo(file string) int {
-	return 0
+	files := compactWholeFiles(readFile(file))
+	fmt.Println(files)
+	return calcCheckSum(files)
 }
 
 func calcCheckSum(nums []int) int {
@@ -36,6 +38,60 @@ func calcCheckSum(nums []int) int {
 		sum += (i * nums[i])
 	}
 	return sum
+}
+
+func compactWholeFiles(filesystem []int) []int {
+
+	endPointer := len(filesystem) - 1
+
+	for endPointer > 0 {
+		currentDigit := filesystem[endPointer]
+		if currentDigit == -1 {
+			endPointer--
+			continue
+		}
+		count := 0
+		lastOccurence := endPointer
+		for filesystem[endPointer] == currentDigit && endPointer > 0 {
+			count += 1
+			lastOccurence = endPointer
+			endPointer--
+		}
+
+		freeIndex, err := findFreeSpaces(filesystem, count, lastOccurence)
+		if err != nil {
+			continue
+		}
+
+		for c := range count {
+			filesystem[freeIndex+c] = filesystem[lastOccurence+c]
+			filesystem[lastOccurence+c] = -1
+		}
+	}
+	return filesystem
+}
+
+func findFreeSpaces(filesystem []int, amount int, lastCheck int) (int, error) {
+	for i := 0; i < lastCheck; i++ {
+		if filesystem[i] == -1 {
+			freeCount := 0
+
+			if i+amount > lastCheck {
+				return 0, errors.New("No sufficient space found")
+			}
+
+			for c := range amount {
+				if filesystem[i+c] == -1 {
+					freeCount++
+				}
+			}
+
+			if freeCount == amount {
+				return i, nil
+			}
+		}
+	}
+	return 0, errors.New("No suffiecient space found")
 }
 
 func compactFiles(fileSystem []int) []int {
