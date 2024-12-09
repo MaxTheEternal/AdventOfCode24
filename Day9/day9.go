@@ -25,7 +25,6 @@ func PartOne(file string) int {
 
 func PartTwo(file string) int {
 	files := compactWholeFiles(readFile(file))
-	fmt.Println(files)
 	return calcCheckSum(files)
 }
 
