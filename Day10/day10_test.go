@@ -1,15 +1,18 @@
 package day10
 
-import "testing"
+import (
+	"testing"
+)
 
-func Test_partOne(t *testing.T) {
+func TestCalcPaths(t *testing.T) {
 	type args struct {
 		file string
 	}
 	tests := []struct {
-		name string
-		args args
-		want int
+		name  string
+		args  args
+		want  int
+		want1 int
 	}{
 		{
 
@@ -18,12 +21,17 @@ func Test_partOne(t *testing.T) {
 				"./day10_input_test.txt",
 			},
 			36,
+			81,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := partOne(tt.args.file); got != tt.want {
-				t.Errorf("partOne() = %v, want %v", got, tt.want)
+			got, got1 := CalcPaths(tt.args.file)
+			if got != tt.want {
+				t.Errorf("CalcPaths() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("CalcPaths() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}

@@ -18,43 +18,47 @@ type coordinate struct {
 func Day10() {
 	file := "./Day10/day10_input.txt"
 	fmt.Println("Day 10")
-	fmt.Println("Part 1: ", partOne(file))
+	part1, part2 := CalcPaths(file)
+	fmt.Println("Part 1: ", part1)
+	fmt.Println("Part 2: ", part2)
 }
 
-func partOne(file string) int {
+func CalcPaths(file string) (int, int) {
 	matrixMap, zeros := readFile(file)
 	if len(zeros) == 0 {
 		log.Fatal("WTF")
 	}
-	sum := 0
+	sumPeaks := 0
+	sumPaths := 0
 	for _, cord := range zeros {
 		peaks := []coordinate{}
-		calcRoutes(matrixMap, cord.x, cord.y, 0, &peaks)
-		sum += len(peaks)
+		sumPaths += calcRoutes(matrixMap, cord.x, cord.y, 0, &peaks)
+		sumPeaks += len(peaks)
 	}
-	return sum
+	return sumPeaks, sumPaths
 
 }
 
-func calcRoutes(matrix [][]int, x, y, value int, peaks *[]coordinate) {
+func calcRoutes(matrix [][]int, x, y, value int, peaks *[]coordinate) int {
 	if x < 0 || x >= len(matrix[0]) || y < 0 || y >= len(matrix) {
-		return
+		return 0
 	}
 	if matrix[y][x] != value {
-		return
+		return 0
 	}
 	if value == 9 {
 		peak := coordinate{x, y}
 		if !slices.Contains(*peaks, peak) {
 			*peaks = append(*peaks, peak)
 		}
-		return
+		return 1
 	}
-	calcRoutes(matrix, x-1, y, value+1, peaks)
-	calcRoutes(matrix, x+1, y, value+1, peaks)
-	calcRoutes(matrix, x, y-1, value+1, peaks)
-	calcRoutes(matrix, x, y+1, value+1, peaks)
-	return
+	sumPaths := 0
+	sumPaths += calcRoutes(matrix, x-1, y, value+1, peaks)
+	sumPaths += calcRoutes(matrix, x+1, y, value+1, peaks)
+	sumPaths += calcRoutes(matrix, x, y-1, value+1, peaks)
+	sumPaths += calcRoutes(matrix, x, y+1, value+1, peaks)
+	return sumPaths
 
 }
 
