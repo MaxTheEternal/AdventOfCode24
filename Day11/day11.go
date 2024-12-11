@@ -7,25 +7,15 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
 
-type safeCounter struct {
-	m       sync.Mutex
-	counter int
+type config struct {
+	v int
+	n int
 }
 
-func (c *safeCounter) Inc() {
-	c.m.Lock()
-	c.counter++
-	c.m.Unlock()
-}
-func (c *safeCounter) Add(n int) {
-	c.m.Lock()
-	c.counter += n
-	c.m.Unlock()
-}
+var cache = make(map[config]int)
 
 func Day11() {
 	fmt.Println("Day 11")
@@ -36,69 +26,48 @@ func Day11() {
 
 	start := time.Now()
 	fmt.Println("Part 1: ", PartTwo(file, 25))
-	fmt.Println("ints Took: ", time.Since(start))
+	fmt.Println("ints cheated Took: ", time.Since(start))
 
 	start = time.Now()
 	fmt.Println("Part 2: ", PartTwo(file, 75))
-	fmt.Println("ints Took: ", time.Since(start))
+	fmt.Println("ints cheated Took: ", time.Since(start))
 }
 
 func PartTwo(file string, amount int) int {
 	start := readFile(file)
-	nums := make([]int, len(start))
-	for i, s := range start {
-		nums[i], _ = strconv.Atoi(s)
+	sum := 0
+	for _, s := range start {
+		v, _ := strconv.Atoi(s)
+		sum += calcTotalStones(v, amount)
+
 	}
-	var wg sync.WaitGroup
-	coutner := safeCounter{sync.Mutex{}, 0}
-
-	for _, num := range nums {
-		wg.Add(1)
-		go func(n, a int) {
-			defer wg.Done()
-			c := safeCounter{sync.Mutex{}, 0}
-			calcTotalStones(n, a, &c)
-			coutner.Add(c.counter)
-		}(num, amount)
-	}
-
-	wg.Wait()
-
-	return coutner.counter
+	return sum
 }
 
-func calcTotalStones(n, amount int, counter *safeCounter) {
-	if amount == 0 {
-		counter.Inc()
-		return
-	}
+func calcTotalStones(v, n int) int {
 	if n == 0 {
-		calcTotalStones(1, amount-1, counter)
-		return
-	}
-	nLen := len(strconv.Itoa(n))
-	if nLen%2 == 0 {
-		num1 := n / (IntPow(10, (nLen / 2)))
-		num2 := n % (IntPow(10, (nLen / 2)))
-		calcTotalStones(num1, amount-1, counter)
-		calcTotalStones(num2, amount-1, counter)
-		return
-	}
-	calcTotalStones((n * 2024), amount-1, counter)
-}
-
-func IntPow(n, m int) int {
-	if m == 0 {
 		return 1
 	}
-	if m == 1 {
-		return n
+	if r, ok := cache[config{v, n}]; ok {
+		return r
 	}
-	result := n
-	for i := 2; i <= m; i++ {
-		result *= n
+	if v == 0 {
+		res := calcTotalStones(1, n-1)
+		cache[config{v, n}] = res
+		return res
 	}
-	return result
+	s := strconv.Itoa(v)
+	if len(s)%2 == 0 {
+		a, _ := strconv.Atoi(s[:len(s)/2])
+		b, _ := strconv.Atoi(s[len(s)/2:])
+		res := calcTotalStones(a, n-1) + calcTotalStones(b, n-1)
+		cache[config{v, n}] = res
+		return res
+	}
+
+	res := calcTotalStones((v * 2024), n-1)
+	cache[config{v, n}] = res
+	return res
 }
 
 func PartOne(file string, amount int) []string {
