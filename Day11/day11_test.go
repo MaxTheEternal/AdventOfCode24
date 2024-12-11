@@ -78,3 +78,39 @@ func TestLength(t *testing.T) {
 		})
 	}
 }
+
+func TestPartTwo(t *testing.T) {
+	type args struct {
+		file   string
+		amount int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			"short test",
+			args{
+				"./day11_input_test.txt",
+				6,
+			},
+			22,
+		},
+		{
+			"proper test",
+			args{
+				"./day11_input_test.txt",
+				25,
+			},
+			55312,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := PartTwo(tt.args.file, tt.args.amount); got != tt.want {
+				t.Errorf("PartTwo() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
