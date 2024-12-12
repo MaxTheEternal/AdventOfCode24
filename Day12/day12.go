@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -16,14 +17,51 @@ type coordinate struct {
 func Day12() {
 	fmt.Println("Day 12")
 
+	file := "./Day12/day12_input.txt"
+	fmt.Println("Part 1: ", calcFencePrices(file))
+}
+
+func calcWithBulkDiscount(file string) int {
+	garden := readFile(file)
+	res := findClusters(garden)
+	sum := 0
+	for _, region := range res {
+		sum += len(region) * calcSides(region)
+	}
+	return sum
+}
+func calcSides(region []coordinate) int {
+
+	return 0
 }
 
 func calcFencePrices(file string) int {
 	garden := readFile(file)
-
 	res := findClusters(garden)
-	fmt.Println(res)
-	return len(res)
+	sum := 0
+	for _, region := range res {
+		sum += len(region) * calcPerimiter(region)
+	}
+	return sum
+}
+
+func calcPerimiter(region []coordinate) int {
+	perimiter := 0
+	for _, reg := range region {
+		if !slices.Contains(region, coordinate{reg.x + 1, reg.y}) {
+			perimiter++
+		}
+		if !slices.Contains(region, coordinate{reg.x - 1, reg.y}) {
+			perimiter++
+		}
+		if !slices.Contains(region, coordinate{reg.x, reg.y + 1}) {
+			perimiter++
+		}
+		if !slices.Contains(region, coordinate{reg.x, reg.y - 1}) {
+			perimiter++
+		}
+	}
+	return perimiter
 }
 
 func findClusters(garden [][]string) [][]coordinate {
@@ -31,37 +69,39 @@ func findClusters(garden [][]string) [][]coordinate {
 	yLen := len(garden)
 	result := [][]coordinate{}
 
-	result = append(result, findCluster(garden[0][0], 0, 0, xLen, yLen, &garden))
-	// for y, line := range garden {
-	// 	for y, cell := range line {
-	// 		if cell == "" {
-	// 			continue
-	// 		}
-	//
-	// 	}
-	// }
+	for y, line := range garden {
+		for x, cell := range line {
+			if cell == "" {
+				continue
+			}
+			res := []coordinate{}
+			findCluster(garden[y][x], x, y, xLen, yLen, &garden, &res)
+			result = append(result, res)
+
+		}
+	}
 	return result
 }
 
-func findCluster(cell string, x, y, xLen, yLen int, garden *[][]string) []coordinate {
+func findCluster(cell string, x, y, xLen, yLen int, garden *[][]string, result *[]coordinate) {
 	if x < 0 || x == xLen || y < 0 || y == yLen {
-		return []coordinate{}
+		return
 	}
 	curCell := (*garden)[y][x]
 	if curCell == "" {
-		return []coordinate{}
+		return
 	}
 	if curCell != cell {
-		return []coordinate{}
+		return
 	}
-	result := []coordinate{coordinate{x, y}}
+	*result = append(*result, coordinate{x, y})
 	(*garden)[y][x] = ""
-	result = append(result, findCluster(cell, x-1, y, xLen, yLen, garden)...)
-	result = append(result, findCluster(cell, x+1, y, xLen, yLen, garden)...)
-	result = append(result, findCluster(cell, x, y-1, xLen, yLen, garden)...)
-	result = append(result, findCluster(cell, x, y-1, xLen, yLen, garden)...)
+	findCluster(cell, x-1, y, xLen, yLen, garden, result)
+	findCluster(cell, x+1, y, xLen, yLen, garden, result)
+	findCluster(cell, x, y-1, xLen, yLen, garden, result)
+	findCluster(cell, x, y+1, xLen, yLen, garden, result)
 
-	return result
+	return
 }
 
 func readFile(file string) [][]string {
