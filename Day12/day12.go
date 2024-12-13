@@ -14,11 +14,19 @@ type coordinate struct {
 	y int
 }
 
+type side struct {
+	x    int
+	y    int
+	xDir int
+	yDir int
+}
+
 func Day12() {
 	fmt.Println("Day 12")
 
 	file := "./Day12/day12_input.txt"
 	fmt.Println("Part 1: ", calcFencePrices(file))
+	fmt.Println("Part 2: ", calcWithBulkDiscount(file))
 }
 
 func calcWithBulkDiscount(file string) int {
@@ -31,8 +39,43 @@ func calcWithBulkDiscount(file string) int {
 	return sum
 }
 func calcSides(region []coordinate) int {
+	edges := []side{}
+	for _, p := range region {
+		if !slices.Contains(region, coordinate{p.x, p.y + 1}) {
+			edges = append(edges, side{p.x, p.y, 0, 1})
+		}
+		if !slices.Contains(region, coordinate{p.x, p.y - 1}) {
+			edges = append(edges, side{p.x, p.y, 0, -1})
+		}
+		if !slices.Contains(region, coordinate{p.x + 1, p.y}) {
+			edges = append(edges, side{p.x, p.y, 1, 0})
+		}
+		if !slices.Contains(region, coordinate{p.x - 1, p.y}) {
+			edges = append(edges, side{p.x, p.y, -1, 0})
+		}
+	}
+	visitedEdges := []side{}
 
-	return 0
+	sum := 0
+	for _, e := range edges {
+		sum += calcSideLength(e, &edges, &visitedEdges)
+	}
+	return sum
+}
+
+func calcSideLength(s side, edges, visited *[]side) int {
+	if !slices.Contains(*edges, s) {
+		return 0
+	}
+	if slices.Contains(*visited, s) {
+		return 0
+	}
+	*visited = append(*visited, s)
+	calcSideLength(side{s.x + 1, s.y, s.xDir, s.yDir}, edges, visited)
+	calcSideLength(side{s.x - 1, s.y, s.xDir, s.yDir}, edges, visited)
+	calcSideLength(side{s.x, s.y - 1, s.xDir, s.yDir}, edges, visited)
+	calcSideLength(side{s.x, s.y + 1, s.xDir, s.yDir}, edges, visited)
+	return 1
 }
 
 func calcFencePrices(file string) int {

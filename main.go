@@ -1,7 +1,7 @@
 package main
 
 import (
-	day12 "github.com/MaxTheEternal/AdventOfCode24/Day12"
+	day13 "github.com/MaxTheEternal/AdventOfCode24/Day13"
 )
 
 func main() {
@@ -16,5 +16,6 @@ func main() {
 	// day9.Day9()
 	// day10.Day10()
 	// day11.Day11()
-	day12.Day12()
+	// day12.Day12()
+	day13.Day13()
 }
