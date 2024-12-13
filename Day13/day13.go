@@ -39,7 +39,12 @@ func PartOne(file string) int {
 	sum := 0
 
 	for _, m := range mashines {
-		sum += bruteForcePrice(m)
+		// sum += bruteForcePrice(m)
+		a, b := calcSmart(m)
+		if a > 100 || b > 100 {
+			continue
+		}
+		sum += 3*a + b
 	}
 	return sum
 }
@@ -48,10 +53,29 @@ func PartTwo(file string) int {
 	sum := 0
 
 	for _, m := range mashines {
-		sum += bruteForcePriceExtreme(m)
+		a, b := calcSmart(m)
+		sum += 3*a + b
 	}
 	return sum
 }
+
+func calcSmart(m mashine) (int, int) {
+	aNenner := (m.b.yDir * m.xTarget) - (m.b.xDir * m.yTarget)
+	aTeiler := (m.b.yDir * m.a.xDir) - (m.a.yDir * m.b.xDir)
+	if aNenner%aTeiler != 0 {
+		return 0, 0
+	}
+	a := aNenner / aTeiler
+
+	bNenner := m.xTarget - (m.a.xDir * a)
+	if bNenner%m.b.xDir != 0 {
+		return 0, 0
+	}
+	b := bNenner / m.b.xDir
+	return a, b
+
+}
+
 func bruteForcePriceExtreme(m mashine) int {
 	prices := []int{}
 	a := 0
