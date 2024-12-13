@@ -1,6 +1,8 @@
 package day13
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestPartOne(t *testing.T) {
 	type args struct {
