@@ -31,6 +31,8 @@ func Day14() {
 	file := "./Day14/day14_input.txt"
 	fmt.Println("Day 14")
 	fmt.Println("Part 1: ", PartOne(file, 100, 101, 103))
+	// fmt.Println("Part 2: ")
+	// Part2(file, 100, 101, 103)
 }
 
 func PartOne(file string, seconds, xLen, yLen int) int {
@@ -70,21 +72,30 @@ func PartOne(file string, seconds, xLen, yLen int) int {
 
 }
 
-func Part2(file string, seconds, xLen, yLen int) {
-	robots := readFile(file)
-
-	for s := range seconds {
-		fmt.Println("After Second:", s)
-		grid := ][]int{}
-		for _ := range yLen {
-			grid = append(grid, )
-		}
-		for _, r := range robots {
-			r.Move(xLen, yLen)
-		}
-
-	}
-}
+// func Part2(file string, seconds, xLen, yLen int) {
+// 	robots := readFile(file)
+//
+// 	for s := range seconds {
+// 		fmt.Println("After Second:", s)
+// 		grid := make([][]string, yLen)
+// 		for i := range yLen {
+// 			row := make([]string, xLen)
+// 			for j := range xLen {
+// 				row[j] = " "
+// 			}
+// 			grid[i] = row
+// 		}
+// 		for _, r := range robots {
+// 			r.Move(xLen, yLen)
+// 			grid[r.yPos][r.xPos] = "#"
+// 		}
+//
+// 		for _, line := range grid {
+// 			fmt.Println(line)
+// 		}
+//
+// 	}
+// }
 
 func readFile(file string) []robot {
 
